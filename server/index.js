@@ -51,6 +51,7 @@ app.post("/login", (req, res) => {
                   lastName: result.lastName,
                   username: result.username,
                   email: result.email,
+                  auth: true,
                 });
               } else res.status(401).send("Incorrect password");
             });
@@ -101,9 +102,24 @@ app.get("/getSessionInfo", (req, res) => {
       lastName: req.session.user.lastName,
       username: req.session.user.username,
       email: req.session.user.email,
+      auth: true,
     });
   } else {
     res.sendStatus(204);
+  }
+});
+
+app.get("/logout", (req, res) => {
+  if (req.session.user) {
+    req.session.destroy((err) => {
+      if (err) {
+        console.log(err);
+        res.sendStatus(500);
+      } else {
+        res.clearCookie("session");
+        res.sendStatus(200);
+      }
+    });
   }
 });
 

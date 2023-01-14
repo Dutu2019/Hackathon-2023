@@ -13,7 +13,7 @@ function User(props) {
     setLastName(userInfo.lastName);
     setEmail(userInfo.email);
     setUsername(userInfo.username);
-    setIsAuth(true);
+    setIsAuth(userInfo.auth);
   };
 
   useEffect(() => {
@@ -26,7 +26,7 @@ function User(props) {
     getUserInfo().then((res) => {
       if (res.status === 200) res.json().then((res) => setUser(res));
     });
-  }, [window.onload]);
+  }, []);
 
   const user = {
     firstName,
