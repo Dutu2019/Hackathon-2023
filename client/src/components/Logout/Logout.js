@@ -1,4 +1,4 @@
-import { React, useContext, useState } from "react";
+import { React, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../../App";
 
@@ -7,7 +7,7 @@ export default function Logout() {
   const navigate = useNavigate();
 
   const getLogout = async () => {
-    return await fetch("http://localhost:3001/logout", {
+    return await fetch("http://172.29.1.18:3001/logout", {
       credentials: "include",
     });
   };

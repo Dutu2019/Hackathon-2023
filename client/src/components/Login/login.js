@@ -15,7 +15,7 @@ const Login = () => {
   const [response, setResponse] = useState();
 
   const submitLogin = async () => {
-    const res = await fetch("http://localhost:3001/login", {
+    const res = await fetch("http://172.29.1.18:3001/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",

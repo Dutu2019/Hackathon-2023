@@ -7,7 +7,12 @@ const expressSession = require("express-session");
 const cookieParser = require("cookie-parser");
 const bcrypt = require("bcrypt");
 
-app.use(cors({ credentials: true, origin: ["http://localhost:3000"] }));
+app.use(
+  cors({
+    credentials: true,
+    origin: ["http://localhost:3000", "http://172.29.1.18:3000"],
+  })
+);
 app.use(
   expressSession({
     key: "session",
@@ -109,6 +114,31 @@ app.get("/getSessionInfo", (req, res) => {
   }
 });
 
+app.get("/messages", (req, res) => {
+  if (req.session.user) {
+    let QUERY = "select * from messages";
+    db.query(QUERY, (err, result) => {
+      if (err) {
+        res.sendStatus(500);
+      } else {
+        res.status(200).send(result);
+      }
+    });
+  }
+});
+
+app.post("/postMessages", (req, res) => {
+  if (req.session.user) {
+    const message = req.body.message;
+    let QUERY = "insert into messages(user, message) values (?, ?)";
+    db.query(QUERY, [req.session.user.username, message], (err) => {
+      if (err) {
+        console.log(err);
+      }
+    });
+  }
+});
+
 app.get("/logout", (req, res) => {
   if (req.session.user) {
     req.session.destroy((err) => {
@@ -123,6 +153,6 @@ app.get("/logout", (req, res) => {
   }
 });
 
-app.listen(3001, "0.0.0.0", () => {
+app.listen(3001, "172.29.1.18", () => {
   console.log("Server listening");
 });

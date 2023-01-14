@@ -18,7 +18,7 @@ function User(props) {
 
   useEffect(() => {
     const getUserInfo = async () => {
-      return await fetch("http://localhost:3001/getSessionInfo", {
+      return await fetch("http://172.29.1.18:3001/getSessionInfo", {
         credentials: "include",
       });
     };
