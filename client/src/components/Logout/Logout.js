@@ -16,7 +16,7 @@ export default function Logout() {
     getLogout().then((res) => {
       if (res) {
         user.setUser({});
-        navigate("/");
+        navigate("/chat");
       }
     });
   }

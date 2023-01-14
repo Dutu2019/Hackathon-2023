@@ -14,7 +14,7 @@ export default function Navbar() {
         <FaChessKing className="icon" />
 
         <div className="links">
-          <Link to="/">Home</Link>
+          <Link to="/chat">Home</Link>
           {!user.isAuth ? <Link to="/login">Login</Link> : <Logout/>}
         </div>
       </div>
