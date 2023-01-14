@@ -1,0 +1,28 @@
+:root {
+  --bg-color: rgba(100, 100, 100, 0.7);
+  --font-color: black;
+  --darkest-color: rgb(20, 0, 152);
+  --bright-color: rgb(34, 0, 255);
+  --brightest-color: white;
+
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: var(--bg-color);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  box-sizing: border-box;
+}
+
+.App {
+  width: 100vw;
+  height: 100vh;
+}
+
+a {
+  text-decoration: none;
+  color: var(--font-color);
+}

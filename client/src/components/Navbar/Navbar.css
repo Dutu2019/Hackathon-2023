@@ -1,0 +1,26 @@
+.Navbar .container {
+  --navbar-height: 3rem;
+  height: var(--navbar-height);
+  display: flex;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(65, 65, 226, 0.8);
+}
+
+.Navbar .icon {
+  height: var(--navbar-height);
+  width: auto;
+  height: 80%;
+  margin: 0 0.7rem;
+}
+
+.Navbar .links {
+  flex-grow: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 1rem;
+  font-size: 120%;
+  height: 100%;
+}
