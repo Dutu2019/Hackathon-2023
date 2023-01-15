@@ -10,7 +10,7 @@ const bcrypt = require("bcrypt");
 app.use(
   cors({
     credentials: true,
-    origin: ["http://localhost:3000", "http://172.29.1.18:3000"],
+    origin: ["http://localhost:3000", "http://10.2.10.51:3000"],
   })
 );
 app.use(
@@ -153,6 +153,6 @@ app.get("/logout", (req, res) => {
   }
 });
 
-app.listen(3001, "172.29.1.18", () => {
+app.listen(3001, "10.2.10.51", () => {
   console.log("Server listening");
 });
