@@ -1,9 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Chat.css";
 
 export default function Chat() {
   const [messages, setMessages] = useState([]);
 
+  // Retrieves the messages each second
   useEffect(() => {
     const interval = setInterval(() => {
       getMessages();
@@ -14,6 +15,7 @@ export default function Chat() {
     };
   }, []);
 
+  // Gets the messages from the server
   const getMessages = () => {
     fetch("http://10.2.10.51:3001/messages", {
       credentials: "include",
@@ -26,6 +28,7 @@ export default function Chat() {
       });
   };
 
+  // Puts all the messages in a variable
   var messageContainer = messages.map((object) => {
     return (
       <div>
@@ -34,17 +37,9 @@ export default function Chat() {
     );
   });
 
-  const input = (
-    <input
-      type="text"
-      onKeyDown={(e) => {
-        submit(e);
-      }}
-    />
-  );
-
+  // Posts the User's message to the server
   function submit(e) {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && e.target.value !== "") {
       fetch("http://10.2.10.51:3001/postMessages", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -59,7 +54,12 @@ export default function Chat() {
   return (
     <div className="Chat">
       <div className="messages">{messageContainer}</div>
-      {input}
+      <input
+        type="text"
+        onKeyDown={(e) => {
+          submit(e);
+        }}
+      />
     </div>
   );
 }
