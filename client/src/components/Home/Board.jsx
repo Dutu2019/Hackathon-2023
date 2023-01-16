@@ -1,10 +1,9 @@
-import React, { useEffect } from "react";
+import React, { Component, useEffect, useState } from "react";
 import "./Board.css";
 
-export default function Board() {
-  useEffect(() => {
-    // Create board
-    const rowLetters = {
+export default class Board extends Component {
+  state = {
+    rowLetters: {
       0: "A",
       1: "B",
       2: "C",
@@ -13,42 +12,56 @@ export default function Board() {
       5: "F",
       6: "G",
       7: "H",
-    };
+    },
+  };
 
-    console.log(rowLetters[0]);
-
-    const board = document.querySelector(".board");
+  createBoard() {
+    let rows = []
     for (let i = 0; i < 8; i++) {
-      const row = document.createElement("div");
-      row.classList = "row";
-
+      let tiles = [];
       for (let j = 0; j < 8; j++) {
-        const tile = document.createElement("div");
-
-        if (i % 2 == 0) {
-          if (j % 2 == 0) {
-            tile.classList = "tile white";
+        let color;
+        if (i % 2 === 0) {
+          if (j % 2 === 0) {
+            color = "white";
           } else {
-            tile.classList = "tile green";
+            color = "green";
           }
         } else {
-          if (j % 2 == 0) {
-            tile.classList = "tile green";
+          if (j % 2 === 0) {
+            color = "green";
           } else {
-            tile.classList = "tile white";
+            color = "white";
           }
         }
-        // Create coords
-        tile.classList += ` ${rowLetters[j]}${8 - i}`;
-        row.appendChild(tile);
+        const tile = (
+          <div
+            className={`tile ${color} ${this.state.rowLetters[j]}${8 - i}`}
+          ></div>
+        );
+        tiles.push(tile)
       }
-      board.appendChild(row);
+      const row = (
+        <div className="row">
+          {tiles.map((tile) => {
+            return tile;
+          })}
+        </div>
+      );
+      rows.push(row);
+      tiles = []
     }
-  }, []);
+    const board = (
+      <div className="board">
+        {rows.map((row) => {
+          return row;
+        })}
+      </div>
+    );
+    return board;
+  }
 
-  return (
-    <div className="board-container">
-      <div className="board"></div>
-    </div>
-  );
+  render() {
+    return <div className="board-container">{this.createBoard()}</div>;
+  }
 }
