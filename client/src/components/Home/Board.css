@@ -1,3 +1,8 @@
+.Board img {
+  width: 80px;
+  height: auto;
+}
+
 .board-container {
   max-width: fit-content;
   margin: auto;
@@ -16,8 +21,10 @@
 }
 
 .tile {
-  height: 80px;
-  width: 80px;
+  --tile-size: 80px;
+
+  height: var(--tile-size);
+  width: var(--tile-size);
 }
 
 .green {
