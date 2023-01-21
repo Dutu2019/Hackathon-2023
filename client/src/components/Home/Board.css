@@ -1,0 +1,36 @@
+.Board img {
+  width: 80px;
+  height: auto;
+}
+
+.board-container {
+  max-width: fit-content;
+  margin: auto;
+}
+
+.board {
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  padding: 10vh;
+}
+
+.row {
+  width: fit-content;
+  display: flex;
+}
+
+.tile {
+  --tile-size: 80px;
+
+  height: var(--tile-size);
+  width: var(--tile-size);
+}
+
+.green {
+  background-color: green;
+}
+
+.white {
+  background-color: white;
+}

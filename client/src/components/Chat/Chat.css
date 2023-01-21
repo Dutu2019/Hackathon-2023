@@ -1,0 +1,10 @@
+.Chat {
+  width: fit-content;
+  margin: auto;
+}
+
+.Chat input {
+  margin-top: 2rem;
+  margin-bottom: 10vh;
+  font-size: 2rem;
+}
