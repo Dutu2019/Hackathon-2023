@@ -19,7 +19,7 @@ const SignUp = () => {
   }, [firstName, lastName, username, email, password]);
 
   const submitForm = async () => {
-    const res = await fetch("http://localhost:3001/sign-up", {
+    const res = await fetch("http://10.2.10.51:3001/sign-up", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

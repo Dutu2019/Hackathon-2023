@@ -2,7 +2,7 @@ import { React, useContext, useRef } from "react";
 import { Link } from "react-router-dom";
 import { FaChessKing } from "react-icons/fa";
 import { UserContext } from "../../App";
-import Logout from "../Logout/Logout"
+import Logout from "../Logout/Logout";
 import "./Navbar.css";
 
 export default function Navbar() {
@@ -15,7 +15,8 @@ export default function Navbar() {
 
         <div className="links">
           <Link to="/">Home</Link>
-          {!user.isAuth ? <Link to="/login">Login</Link> : <Logout/>}
+          <Link to="/chat">Chat</Link>
+          {!user.isAuth ? <Link to="/login">Login</Link> : <Logout />}
         </div>
       </div>
     </div>
