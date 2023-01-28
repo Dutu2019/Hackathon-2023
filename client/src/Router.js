@@ -5,8 +5,9 @@ import Navbar from "./components/Navbar/Navbar";
 import Login from "./components/Login/login";
 import SignUp from "./components/SignUp/SignUp";
 import Chat from "./components/Chat/Chat";
-import { UserContext } from "./App";
 import Board from "./components/Home/Board";
+import Home from "./components/Home/Home"
+import { UserContext } from "./App";
 
 export default function Router() {
   const user = useContext(UserContext);
@@ -15,7 +16,7 @@ export default function Router() {
     <BrowserRouter>
       <Navbar />
       <Routes>
-        <Route path="/" element={<Board />} />
+        <Route path="/" element={<Home />} />
         <Route
           path="/chat"
           element={

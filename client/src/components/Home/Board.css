@@ -1,36 +1,41 @@
-.Board img {
-  width: 80px;
-  height: auto;
-}
-
 .board-container {
   max-width: fit-content;
   margin: auto;
 }
 
-.board {
+.board-container .board {
   display: flex;
   flex-direction: column;
   width: fit-content;
   padding: 10vh;
 }
 
-.row {
+.board-container .row {
   width: fit-content;
   display: flex;
 }
 
-.tile {
+.board-container .tile {
   --tile-size: 80px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   height: var(--tile-size);
   width: var(--tile-size);
 }
 
-.green {
-  background-color: green;
+.board-container .green {
+  background-color: rgb(31, 192, 31);
 }
 
-.white {
+.board-container .white {
   background-color: white;
+}
+
+img.piece {
+  height: 90%;
+  width: auto;
+  user-select: none;
 }
