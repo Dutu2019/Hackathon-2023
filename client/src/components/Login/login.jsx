@@ -27,7 +27,7 @@ const Login = () => {
 
     if (res.status === 200) {
       user.setUser(await res.json());
-      navigate("/chat");
+      navigate("/");
     } else {
       setResponse(await res.text());
     }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Bbishop from "../../icons/bishop.svg";
 import Bking from "../../icons/king.svg";
 import Bknight from "../../icons/knight.svg";
@@ -11,14 +11,13 @@ import Wking from "../../icons/Wking.svg";
 import Wpawn from "../../icons/Wpawn.svg";
 import Wqueen from "../../icons/Wqueen.svg";
 import Wrook from "../../icons/Wrook.svg";
+import Blank from "../../icons/blank.png";
 
 export default function Piece(props) {
   // Offset for dragging
   const [offsetX, setOffsetX] = useState(0);
   const [offsetY, setOffsetY] = useState(0);
   const [style, setStyle] = useState({});
-
-  const canvas = document.createElement("canvas");
 
   const id = props.id;
   const coords = props.tile;
@@ -31,7 +30,6 @@ export default function Piece(props) {
       draggable
       onDragStart={dragStart}
       onDrag={move}
-      onDragOver={dragOver}
       onDragEnd={dragEnd}
     >
       {img}
@@ -71,6 +69,7 @@ export default function Piece(props) {
   }
 
   function dragStart(e) {
+    e.dataTransfer.setData("text", id);
     if (offsetX === 0 && offsetY === 0) {
       setOffsetX(e.target.getBoundingClientRect().left);
       setOffsetY(e.target.getBoundingClientRect().top);
@@ -83,16 +82,13 @@ export default function Piece(props) {
   }
 
   function move(e) {
-    e.target.classList.add("dragging");
-    e.dataTransfer.setDragImage(canvas, 0, 0);
-    setStyle({
-      left: `${e.pageX - offsetX}px`,
-      top: `${e.pageY - offsetY}px`,
-    });
-  }
-
-  function dragOver(e) {
-    e.preventDefault();
+    // e.target.classList.add("dragging");
+    // setStyle({
+    //   transform: `translate(
+    //     ${(100 * (e.pageX - offsetX)) / 80}%,
+    //     ${(100 * (e.pageY - offsetY)) / 80}%
+    //   )`,
+    // });
   }
 
   function dragEnd(e) {

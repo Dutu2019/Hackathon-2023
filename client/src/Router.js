@@ -5,7 +5,6 @@ import Navbar from "./components/Navbar/Navbar";
 import Login from "./components/Login/login";
 import SignUp from "./components/SignUp/SignUp";
 import Chat from "./components/Chat/Chat";
-import Board from "./components/Home/Board";
 import Home from "./components/Home/Home"
 import { UserContext } from "./App";
 
