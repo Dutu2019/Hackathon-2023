@@ -1,20 +1,14 @@
 import React, { useContext } from "react";
-import { UserContext } from "../../App";
-import { io } from "socket.io-client";
+import { UserContext } from "../../Contexts/User";
 
-export default function PlayButton() {
-  // const user = useContext(UserContext);
-  const socket = io("http://10.2.10.51:3001")
-
-  function onPlay() {
-
-  }
-
-  function openSocket() {}
+export default function PlayButton({ onClick }) {
+  const user = useContext(UserContext);
 
   return (
-    <button className="PlayButton" type="button" onClick={onPlay}>
-      Play
-    </button>
+    user.isAuth && (
+      <button type="submit" onClick={onClick}>
+        Play
+      </button>
+    )
   );
 }

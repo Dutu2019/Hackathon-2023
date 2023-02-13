@@ -5,31 +5,28 @@ const expressSession = require("express-session");
 const cors = require("cors");
 
 // HTTP libraries
-const HTTPServer = require("http").createServer(app)
+const HTTPServer = require("http").createServer(app);
 const bodyParser = require("body-parser");
 const bcrypt = require("bcrypt");
-
-// Sockets
-const io = require("socket.io")(HTTPServer, {cors: {origin: ["http://10.2.10.51:3000"]}})
 
 // Database
 const db = require("./db");
 
-// Middleware
+// HTTP Middleware
+const session = expressSession({
+  key: "session",
+  secret: "Hackathon2023",
+  resave: false,
+  saveUninitialized: false,
+});
+
 app.use(
   cors({
     credentials: true,
     origin: ["http://localhost:3000", "http://10.2.10.51:3000"],
   })
 );
-app.use(
-  expressSession({
-    key: "session",
-    secret: "Hackathon2023",
-    resave: false,
-    saveUninitialized: false,
-  })
-);
+app.use(session);
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use((req, res, next) => {
@@ -143,9 +140,10 @@ app.post("/postMessages", (req, res) => {
     db.query(QUERY, [req.session.user.username, message], (err) => {
       if (err) {
         console.log(err);
-      }
+        res.sendStatus(500);
+      } else res.sendStatus(200);
     });
-  }
+  } else res.sendStatus(401);
 });
 
 app.get("/logout", (req, res) => {
@@ -228,10 +226,40 @@ app.post("/checkMove", (req, res) => {
   }
 });
 
+// Sockets
+const io = require("socket.io")(HTTPServer, {
+  cors: {
+    credentials: true,
+    origin: ["http://10.2.10.51:3000"],
+    methods: ["GET", "POST"],
+  },
+});
+
+// io Middleware
+const socketSession = require("express-socket.io-session");
+const sharedSession = socketSession(session, { autoSave: true });
+io.use(sharedSession);
+
+// Waiting list
+let waitingList = [];
+// io Paths
+
+io.on("connection", (socket) => {
+  console.log("io connection with", socket.id);
+  // Handles moves from client
+  socket.on("handleMove", (position, move) => {
+    position.map((piece, index) => {
+      if (piece.tile == move.tileId && piece.id != move.pieceId) {
+        position.splice(index, 1);
+      }
+      if (piece.id == move.pieceId) {
+        piece.tile = move.tileId;
+      }
+    });
+    socket.emit("updatePos", position);
+  });
+});
+
 HTTPServer.listen(3001, "10.2.10.51", () => {
   console.log("Server listening");
 });
-
-io.on('connection', (socket) => {
-  console.log('yes')
-})

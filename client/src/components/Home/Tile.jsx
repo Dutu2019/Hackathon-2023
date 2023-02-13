@@ -11,7 +11,6 @@ export default function Tile(props) {
   function onDrop(e) {
     const draggedId = e.dataTransfer.getData("text");
     props.moveTo({pieceId: draggedId, tileId: id});
-    console.log(id)
   }
 
   return (

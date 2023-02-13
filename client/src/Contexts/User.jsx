@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { UserContext } from "../App";
+import { useEffect, useState, createContext } from "react";
 
+export const UserContext = createContext();
 function User(props) {
   const [firstName, setFirstName] = useState(null);
   const [lastName, setLastName] = useState(null);
@@ -17,15 +17,15 @@ function User(props) {
   };
 
   useEffect(() => {
-    // const getUserInfo = async () => {
-    //   return await fetch("http://10.2.10.51:3001/getSessionInfo", {
-    //     credentials: "include",
-    //   });
-    // };
+    const getUserInfo = async () => {
+      return await fetch("http://10.2.10.51:3001/getSessionInfo", {
+        credentials: "include",
+      });
+    };
 
-    // getUserInfo().then((res) => {
-    //   if (res.status === 200) res.json().then((res) => setUser(res));
-    // });
+    getUserInfo().then((res) => {
+      if (res.status === 200) res.json().then((res) => setUser(res));
+    });
   }, []);
 
   const user = {

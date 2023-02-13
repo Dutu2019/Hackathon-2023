@@ -1,11 +1,9 @@
-import React, { useState, useEffect, useContext } from "react";
-import { UserContext } from "../../App";
+import React from "react";
 import Tile from "./Tile";
 import Piece from "./Piece";
 
-export default function Board({ reverse }) {
-  const user = useContext(UserContext);
-  const [position, setPosition] = useState([]);
+export default function Board({ reverse, pos, handleMove }) {
+  const position = pos
   const rowLetters = {
     0: "A",
     1: "B",
@@ -16,32 +14,6 @@ export default function Board({ reverse }) {
     6: "G",
     7: "H",
   };
-
-  function getPosition() {
-    // Problem: Delay the userContext before loading components
-    fetch("http://10.2.10.51:3001/getPosition", {
-      credentials: "include",
-    })
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => setPosition(data));
-  }
-
-  const handleMove = ({ pieceId, tileId }) => {
-    if (user.isAuth) {
-      fetch("http://10.2.10.51:3001/checkMove", {
-        method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ move: { pieceId, tileId } }),
-      }).then(() => getPosition());
-    }
-  };
-
-  useEffect(() => {
-    getPosition();
-  }, []);
 
   // Renders the board
   function createBoard() {

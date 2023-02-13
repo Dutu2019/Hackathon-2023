@@ -1,7 +1,7 @@
-import { React, useContext, useRef } from "react";
+import { React, useContext } from "react";
 import { Link } from "react-router-dom";
 import { FaChessKing } from "react-icons/fa";
-import { UserContext } from "../../App";
+import { UserContext } from "../../Contexts/User";
 import Logout from "../Logout/Logout";
 import "./Navbar.css";
 

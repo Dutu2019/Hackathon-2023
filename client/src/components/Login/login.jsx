@@ -2,7 +2,7 @@ import "./Login.css";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useContext, useEffect, useRef, useState } from "react";
 import Popup from "../Popup/Popup";
-import { UserContext } from "../../App";
+import { UserContext } from "../../Contexts/User";
 
 const Login = () => {
   const location = useLocation();
