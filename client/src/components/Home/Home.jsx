@@ -5,8 +5,9 @@ import PlayButton from "./PlayButton";
 import "./Home.css";
 
 export default function Home() {
-  const socket = useContext(SocketContext)
-  const [isPlaying, setIsPlaying] = useState(false);
+  const socket = useContext(SocketContext);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [boardReverse, setBoardReverse] = useState(false)
   const [currPos, setCurrPos] = useState([
     { id: 1, name: "rook", color: "W", tile: "A1" },
     { id: 2, name: "rook", color: "W", tile: "H1" },
@@ -41,14 +42,15 @@ export default function Home() {
     { id: 31, name: "pawn", color: "B", tile: "G7" },
     { id: 32, name: "pawn", color: "B", tile: "H7" },
   ]);
-  socket.on("connect", () => {
-    setIsPlaying(true);
-    socket.on("updatePos", (pos) => {
-      setCurrPos(pos);
-    });
+  socket.on("updatePos", (pos) => {
+    setCurrPos(pos);
   });
-
+  
   function onPlay() {}
+
+  function flipBoard() {
+    setBoardReverse(!boardReverse)
+  }
 
   function handleMove({ pieceId, tileId }) {
     socket.emit("handleMove", currPos, { pieceId: pieceId, tileId: tileId });
@@ -56,8 +58,9 @@ export default function Home() {
 
   return (
     <div className="Home">
-      <Board reverse={false} handleMove={handleMove} pos={currPos} />
+      <Board reverse={boardReverse} handleMove={handleMove} pos={currPos} />
       {!isPlaying && <PlayButton onClick={onPlay} />}
+      <button onClick={flipBoard}>Flip Board</button>
     </div>
   );
 }

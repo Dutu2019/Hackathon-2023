@@ -20,7 +20,7 @@ export default function Piece(props) {
   const [style, setStyle] = useState({});
 
   const id = props.id;
-  const coords = props.tile;
+  const tile = props.tile;
   const type = props.type;
   const img = <img src={getImg(type)} alt="" />;
   const piece = (

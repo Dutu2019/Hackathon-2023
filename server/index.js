@@ -23,7 +23,11 @@ const session = expressSession({
 app.use(
   cors({
     credentials: true,
-    origin: ["http://localhost:3000", "http://10.2.10.51:3000"],
+    origin: [
+      "http://localhost:3000",
+      "http://10.2.10.51:3000",
+      "http://24.105.118.62:3000",
+    ],
   })
 );
 app.use(session);
@@ -210,6 +214,14 @@ app.post("/checkMove", (req, res) => {
     if (req.session.position) {
       const move = req.body.move;
       const position = req.session.position;
+
+      let draggedPiece = position.forEach((piece) => {
+        return piece.id == move.pieceId;
+      });
+      let tilePiece = position.forEach((piece) => {
+        return (piece.tile = move.tileId);
+      });
+      console.log(draggedPiece, tilePiece);
       position.map((piece, index) => {
         if (piece.tile == move.tileId && piece.id != move.pieceId) {
           position.splice(index, 1);
@@ -230,7 +242,7 @@ app.post("/checkMove", (req, res) => {
 const io = require("socket.io")(HTTPServer, {
   cors: {
     credentials: true,
-    origin: ["http://10.2.10.51:3000"],
+    origin: ["http://10.2.10.51:3000", "http://24.105.118.62:3000"],
     methods: ["GET", "POST"],
   },
 });
@@ -248,15 +260,26 @@ io.on("connection", (socket) => {
   console.log("io connection with", socket.id);
   // Handles moves from client
   socket.on("handleMove", (position, move) => {
+    let draggedPiece = position.find((piece) => {
+      return piece.id == move.pieceId;
+    });
+    let tilePiece = position.find((piece) => {
+      return piece.tile == move.tileId;
+    });
+
     position.map((piece, index) => {
+      // Checks if legal move (not done yet)
+      let legalMove;
       if (piece.tile == move.tileId && piece.id != move.pieceId) {
         position.splice(index, 1);
       }
+
+      // Executes the move
       if (piece.id == move.pieceId) {
         piece.tile = move.tileId;
       }
     });
-    socket.emit("updatePos", position);
+    io.emit("updatePos", position);
   });
 });
 

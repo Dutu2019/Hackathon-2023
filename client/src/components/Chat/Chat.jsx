@@ -17,7 +17,7 @@ export default function Chat() {
 
   // Gets the messages from the server
   const getMessages = () => {
-    fetch("http://10.2.10.51:3001/messages", {
+    fetch(`http://${process.env.REACT_APP_SERVER_IP}/messages`, {
       credentials: "include",
     })
       .then((res) => {
@@ -40,7 +40,7 @@ export default function Chat() {
   // Posts the User's message to the server
   function submit(e) {
     if (e.key === "Enter" && e.target.value !== "") {
-      fetch("http://10.2.10.51:3001/postMessages", {
+      fetch(`http://${process.env.REACT_APP_SERVER_IP}/postMessages`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

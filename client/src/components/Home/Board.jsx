@@ -42,7 +42,7 @@ export default function Board({ reverse, pos, handleMove }) {
                           <Piece
                             id={piece.id}
                             key={piece.id}
-                            coords={piece.tile}
+                            tile={piece.tile}
                             type={{ name: piece.name, color: piece.color }}
                           />
                         );
