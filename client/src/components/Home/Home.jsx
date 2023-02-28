@@ -53,6 +53,7 @@ export default function Home() {
   }
 
   function handleMove({ pieceId, tileId }) {
+    console.log('yes')
     socket.emit("handleMove", currPos, { pieceId: pieceId, tileId: tileId });
   }
 

@@ -15,7 +15,7 @@ const Login = () => {
   const [response, setResponse] = useState();
 
   const submitLogin = async () => {
-    const res = await fetch(`http://${process.env.REACT_APP_SERVER_IP}/login`, {
+    const res = await fetch(`${process.env.REACT_APP_SERVER_IP}/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",

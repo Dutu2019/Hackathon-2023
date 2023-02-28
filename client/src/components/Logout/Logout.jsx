@@ -7,7 +7,7 @@ export default function Logout() {
   const navigate = useNavigate();
 
   const getLogout = async () => {
-    return await fetch(`http://${process.env.REACT_APP_SERVER_IP}/logout`, {
+    return await fetch(`${process.env.REACT_APP_SERVER_IP}/logout`, {
       credentials: "include",
     });
   };

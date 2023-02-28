@@ -18,7 +18,7 @@ function User(props) {
 
   useEffect(() => {
     const getUserInfo = async () => {
-      return await fetch(`http://${process.env.REACT_APP_SERVER_IP}/getSessionInfo`, {
+      return await fetch(`${process.env.REACT_APP_SERVER_IP}/getSessionInfo`, {
         credentials: "include",
       });
     };

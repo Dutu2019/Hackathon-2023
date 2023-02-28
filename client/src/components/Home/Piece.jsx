@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import Bbishop from "../../icons/bishop.svg";
 import Bking from "../../icons/king.svg";
 import Bknight from "../../icons/knight.svg";
@@ -11,7 +11,6 @@ import Wking from "../../icons/Wking.svg";
 import Wpawn from "../../icons/Wpawn.svg";
 import Wqueen from "../../icons/Wqueen.svg";
 import Wrook from "../../icons/Wrook.svg";
-import Blank from "../../icons/blank.png";
 
 export default function Piece(props) {
   // Offset for dragging

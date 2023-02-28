@@ -4,8 +4,18 @@ const app = express();
 const expressSession = require("express-session");
 const cors = require("cors");
 
+// Utilities
+const fs = require("fs");
+const path = require("path");
+
 // HTTP libraries
-const HTTPServer = require("http").createServer(app);
+const HTTPSServer = require("https").createServer(
+  {
+    key: fs.readFileSync(path.join(__dirname, "HTTPS", "key.pem")),
+    cert: fs.readFileSync(path.join(__dirname, "HTTPS", "cert.pem")),
+  },
+  app
+);
 const bodyParser = require("body-parser");
 const bcrypt = require("bcrypt");
 
@@ -18,16 +28,13 @@ const session = expressSession({
   secret: "Hackathon2023",
   resave: false,
   saveUninitialized: false,
+  cookie: {secure: true}
 });
 
 app.use(
   cors({
     credentials: true,
-    origin: [
-      "http://localhost:3000",
-      "http://10.2.10.51:3000",
-      "http://24.105.118.62:3000",
-    ],
+    origin: ["http://10.2.10.51:3000", "https://server.queteck.com:3000"],
   })
 );
 app.use(session);
@@ -39,6 +46,10 @@ app.use((req, res, next) => {
 });
 
 // HTTP Routes
+app.get("/", (req, res) => {
+  res.send("Hello this is backend :)")
+})
+
 app.post("/login", (req, res) => {
   if (req.body.email && req.body.password) {
     const email = req.body.email;
@@ -238,51 +249,9 @@ app.post("/checkMove", (req, res) => {
   }
 });
 
-// Sockets
-const io = require("socket.io")(HTTPServer, {
-  cors: {
-    credentials: true,
-    origin: ["http://10.2.10.51:3000", "http://24.105.118.62:3000"],
-    methods: ["GET", "POST"],
-  },
-});
+// Socket logic
+require("./socketio").socket(HTTPSServer, session);
 
-// io Middleware
-const socketSession = require("express-socket.io-session");
-const sharedSession = socketSession(session, { autoSave: true });
-io.use(sharedSession);
-
-// Waiting list
-let waitingList = [];
-// io Paths
-
-io.on("connection", (socket) => {
-  console.log("io connection with", socket.id);
-  // Handles moves from client
-  socket.on("handleMove", (position, move) => {
-    let draggedPiece = position.find((piece) => {
-      return piece.id == move.pieceId;
-    });
-    let tilePiece = position.find((piece) => {
-      return piece.tile == move.tileId;
-    });
-
-    position.map((piece, index) => {
-      // Checks if legal move (not done yet)
-      let legalMove;
-      if (piece.tile == move.tileId && piece.id != move.pieceId) {
-        position.splice(index, 1);
-      }
-
-      // Executes the move
-      if (piece.id == move.pieceId) {
-        piece.tile = move.tileId;
-      }
-    });
-    io.emit("updatePos", position);
-  });
-});
-
-HTTPServer.listen(3001, "10.2.10.51", () => {
+HTTPSServer.listen(3001, "10.2.10.51", () => {
   console.log("Server listening");
 });
