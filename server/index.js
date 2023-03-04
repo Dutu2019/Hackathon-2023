@@ -28,7 +28,7 @@ const session = expressSession({
   secret: "Hackathon2023",
   resave: false,
   saveUninitialized: false,
-  cookie: {secure: true}
+  cookie: { secure: true, sameSite: "none" },
 });
 
 app.use(
@@ -47,8 +47,8 @@ app.use((req, res, next) => {
 
 // HTTP Routes
 app.get("/", (req, res) => {
-  res.send("Hello this is backend :)")
-})
+  res.send("Hello this is backend :)");
+});
 
 app.post("/login", (req, res) => {
   if (req.body.email && req.body.password) {

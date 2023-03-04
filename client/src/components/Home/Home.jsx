@@ -6,8 +6,9 @@ import "./Home.css";
 
 export default function Home() {
   const socket = useContext(SocketContext);
-  const [isPlaying, setIsPlaying] = useState(true);
-  const [boardReverse, setBoardReverse] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [boardReverse, setBoardReverse] = useState(false);
   const [currPos, setCurrPos] = useState([
     { id: 1, name: "rook", color: "W", tile: "A1" },
     { id: 2, name: "rook", color: "W", tile: "H1" },
@@ -45,23 +46,40 @@ export default function Home() {
   socket.on("updatePos", (pos) => {
     setCurrPos(pos);
   });
-  
-  function onPlay() {}
+
+  function onPlay() {
+    setIsPlaying(!isPlaying);
+    socket.emit("play");
+    setIsLoading(true);
+    socket.on("match found", () => {
+      setIsLoading(false);
+    });
+  }
 
   function flipBoard() {
-    setBoardReverse(!boardReverse)
+    setBoardReverse(!boardReverse);
   }
 
   function handleMove({ pieceId, tileId }) {
-    console.log('yes')
     socket.emit("handleMove", currPos, { pieceId: pieceId, tileId: tileId });
+  }
+
+  function getSession() {
+    fetch("https://10.2.10.51:3001/getSessionInfo", { credentials: "include" });
   }
 
   return (
     <div className="Home">
-      <Board reverse={boardReverse} handleMove={handleMove} pos={currPos} />
-      {!isPlaying && <PlayButton onClick={onPlay} />}
-      <button onClick={flipBoard}>Flip Board</button>
+      {!isLoading && (
+        <>
+          <Board reverse={boardReverse} handleMove={handleMove} pos={currPos} />
+          {!isPlaying && <PlayButton onClick={onPlay} />}
+          <button onClick={flipBoard}>Flip Board</button>
+          <button className="getsession" onClick={getSession}>
+            Get Session
+          </button>
+        </>
+      )}
     </div>
   );
 }
