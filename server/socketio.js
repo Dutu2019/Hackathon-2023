@@ -1,6 +1,6 @@
 function socket(HTTPSServer, session) {
   // Random byte generator
-  const crypto = require("crypto")
+  const crypto = require("crypto");
 
   // Sockets
   const io = require("socket.io")(HTTPSServer, {
@@ -21,6 +21,12 @@ function socket(HTTPSServer, session) {
     console.log("io connection with", socket.id, socket.handshake.address);
     var cookie = socket.handshake.session || socket.request.session;
 
+    // On user disconnect
+    socket.on("disconnect", () => {
+      console.log(`${socket.id} has disconnected`)
+      if (waitingList.includes(socket)) waitingList = [];
+    });
+
     // User clickes on play
     socket.on("play", () => {
       // Fix cookie not updating
@@ -29,14 +35,14 @@ function socket(HTTPSServer, session) {
       // Checks if someone is in waiting room
       if (waitingList.length != 0) {
         // Pairs users in rooms
-        let room = crypto.randomBytes(20).toString('hex')
+        let room = crypto.randomBytes(20).toString("hex");
         waitingList[0].join(room);
         waitingList[0].request.session.room = room;
 
         socket.join(room);
         socket.request.session.room = room;
-        io.to(room).emit("match found")
-        waitingList = []
+        io.to(room).emit("match found");
+        waitingList = [];
       } else {
         // Puts client in a waiting room
         waitingList.push(socket);

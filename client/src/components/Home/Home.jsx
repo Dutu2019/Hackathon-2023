@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { SocketContext } from "../../Contexts/Socket";
 import Board from "./Board";
 import PlayButton from "./PlayButton";
+import Bking from "../../icons/king.svg";
 import "./Home.css";
 
 export default function Home() {
@@ -43,16 +44,27 @@ export default function Home() {
     { id: 31, name: "pawn", color: "B", tile: "G7" },
     { id: 32, name: "pawn", color: "B", tile: "H7" },
   ]);
-  socket.on("updatePos", (pos) => {
-    setCurrPos(pos);
-  });
 
+  // Loading HTML
+  const loading = (
+    <div className="loading">
+      <h1>Finding match...</h1>
+      <div className="loadingBG">
+        <img src={Bking} alt="" />
+      </div>
+    </div>
+  );
+
+  // Client interaction functions
   function onPlay() {
-    setIsPlaying(!isPlaying);
     socket.emit("play");
     setIsLoading(true);
     socket.on("match found", () => {
       setIsLoading(false);
+      setIsPlaying(true);
+      socket.on("updatePos", (pos) => {
+        setCurrPos(pos);
+      });
     });
   }
 
@@ -70,7 +82,9 @@ export default function Home() {
 
   return (
     <div className="Home">
-      {!isLoading && (
+      {isLoading ? (
+        loading
+      ) : (
         <>
           <Board reverse={boardReverse} handleMove={handleMove} pos={currPos} />
           {!isPlaying && <PlayButton onClick={onPlay} />}
