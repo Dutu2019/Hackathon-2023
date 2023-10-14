@@ -5,8 +5,8 @@ export const SocketContext = createContext();
 export default function Socket(props) {
   const socket = io(process.env.REACT_APP_SERVER_IP, { withCredentials: true });
   return (
-  <SocketContext.Provider value={socket}>
-    {props.children}
-  </SocketContext.Provider>
+    <SocketContext.Provider value={socket}>
+      {props.children}
+    </SocketContext.Provider>
   );
 }

@@ -17,15 +17,22 @@ function User(props) {
   };
 
   useEffect(() => {
-    const getUserInfo = async () => {
-      return await fetch(`${process.env.REACT_APP_SERVER_IP}/getSessionInfo`, {
-        credentials: "include",
-      });
+    const getUserinfo = async () => {
+      try {
+        const session = await fetch(
+          `${process.env.REACT_APP_SERVER_IP}/getSessionInfo`,
+          {
+            credentials: "include",
+          }
+        );
+        if (session.status === 200) {
+          setUser(await session.json());
+        }
+      } catch (err) {
+        console.log(err);
+      }
     };
-
-    getUserInfo().then((res) => {
-      if (res.status === 200) res.json().then((res) => setUser(res));
-    });
+    getUserinfo();
   }, []);
 
   const user = {

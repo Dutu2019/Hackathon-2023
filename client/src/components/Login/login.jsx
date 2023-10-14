@@ -15,33 +15,33 @@ const Login = () => {
   const [response, setResponse] = useState();
 
   const submitLogin = async () => {
-    const res = await fetch(`${process.env.REACT_APP_SERVER_IP}/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify({
-        email: email.current,
-        password: password.current,
-      }),
-    });
+    try {
+      const res = await fetch(`${process.env.REACT_APP_SERVER_IP}/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          email: email.current,
+          password: password.current,
+        }),
+      });
 
-    if (res.status === 200) {
-      user.setUser(await res.json());
-      navigate("/");
-    } else {
-      setResponse(await res.text());
+      if (res.status === 200) {
+        user.setUser(await res.json());
+        navigate("/");
+      } else {
+        setResponse(await res.text());
+      }
+    } catch (err) {
+      setResponse("Cannot connect to server");
     }
   };
-
   useEffect(() => {
     if (location.state && location.state.message) {
       setResponse(location.state.message);
+      setTimeout(() => setResponse(), 3000);
     }
-  }, [location]);
-
-  useEffect(() => {
-    setTimeout(() => setResponse(), 3000);
-  }, [response]);
+  }, []);
 
   return (
     <div className="login">

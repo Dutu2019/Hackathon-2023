@@ -1,4 +1,4 @@
-function socket(HTTPSServer, session) {
+function socket(HTTPSServer) {
   // Random byte generator
   const crypto = require("crypto");
 
@@ -9,9 +9,6 @@ function socket(HTTPSServer, session) {
       origin: ["http://10.2.10.51:3000", "https://server.queteck.com:3000"],
     },
   });
-
-  // io session Middleware
-  io.engine.use(session);
 
   // Waiting list
   let waitingList = [];

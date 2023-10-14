@@ -6,7 +6,7 @@ import Popup from "../Popup/Popup";
 const SignUp = () => {
   const navigate = useNavigate();
 
-  const [response, setResponse] = useState();
+  const [response, setResponse] = useState({});
 
   const firstName = useRef();
   const lastName = useRef();
@@ -19,25 +19,29 @@ const SignUp = () => {
   }, [firstName, lastName, username, email, password]);
 
   const submitForm = async () => {
-    const res = await fetch(`${process.env.REACT_APP_SERVER_IP}/sign-up`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        firstName: firstName.current,
-        lastName: lastName.current,
-        username: username.current,
-        email: email.current,
-        password: password.current,
-      }),
-    });
-
-    if (res.status === 200)
+    try {
+      const res = await fetch(`${process.env.REACT_APP_SERVER_IP}/sign-up`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          firstName: firstName.current,
+          lastName: lastName.current,
+          username: username.current,
+          email: email.current,
+          password: password.current,
+        }),
+      });
+      console.log("yes");
       navigate("/login", { state: { message: await res.text() } });
-    else {
-      setResponse({ status: res.status, message: await res.text() });
-      setTimeout(() => {
-        setResponse();
-      }, 3000);
+    } catch (err) {
+      if (err.status) {
+        setResponse({ status: res.status, message: await res.text() });
+        setTimeout(() => {
+          setResponse();
+        }, 3000);
+      } else {
+        setResponse({ status: 404, message: "Cannot connect to server" });
+      }
     }
   };
 
