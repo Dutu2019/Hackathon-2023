@@ -1,43 +1,61 @@
-function socket(HTTPSServer) {
-  // Random byte generator
-  const crypto = require("crypto");
+// Random byte generator
+import crypto from "crypto";
+import cookie from "cookie";
+import * as jwt from "jsonwebtoken";
+import { Server } from "socket.io";
 
+interface cookie {
+  
+}
+
+export default function socket(HTTPSServer) {
   // Sockets
-  const io = require("socket.io")(HTTPSServer, {
+  const io = new Server(HTTPSServer, {
     cors: {
       credentials: true,
-      origin: ["http://10.2.10.51:3000", "https://server.queteck.com:3000"],
+      origin: [
+        "http://localhost:3000",
+        "http://10.2.10.51:3000",
+        "http://24.105.118.62:3000",
+        "http://server.queteck.com:3000",
+      ],
     },
   });
 
   // Waiting list
   let waitingList = [];
 
+  // Active games
+  let gameRooms = [];
+
+  // Socketio cookie
+  // session: {
+  //   user: {name, lastName, username, email, isAuth},
+  //   isPlaying,
+  //   currGame: room
+  // }
+  let session;
+
   // io Paths
   io.on("connection", (socket) => {
     console.log("io connection with", socket.id, socket.handshake.address);
-    var cookie = socket.handshake.session || socket.request.session;
 
     // On user disconnect
     socket.on("disconnect", () => {
-      console.log(`${socket.id} has disconnected`)
+      console.log(`${socket.id} has disconnected`);
       if (waitingList.includes(socket)) waitingList = [];
     });
 
     // User clickes on play
     socket.on("play", () => {
-      // Fix cookie not updating
-      console.log(cookie);
-
       // Checks if someone is in waiting room
       if (waitingList.length != 0) {
         // Pairs users in rooms
         let room = crypto.randomBytes(20).toString("hex");
-        waitingList[0].join(room);
-        waitingList[0].request.session.room = room;
+        gameRooms.push(room);
 
+        waitingList[0].join(room);
         socket.join(room);
-        socket.request.session.room = room;
         io.to(room).emit("match found");
         waitingList = [];
       } else {
@@ -66,9 +84,10 @@ function socket(HTTPSServer) {
             piece.tile = move.tileId;
           }
         });
-        io.to(socket.request.session.room).emit("updatePos", position);
       });
     });
   });
+
+  // Set/change cookie
+  io.engine.on("headers", (headers, req) => {});
 }
-module.exports = { socket };

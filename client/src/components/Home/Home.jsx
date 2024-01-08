@@ -77,7 +77,9 @@ export default function Home() {
   }
 
   function getSession() {
-    fetch("https://10.2.10.51:3001/getSessionInfo", { credentials: "include" });
+    fetch(`${process.env.REACT_APP_SERVER_IP}/getSessionInfo`, {
+      credentials: "include",
+    });
   }
 
   return (

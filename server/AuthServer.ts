@@ -1,10 +1,10 @@
-const express = require("express");
-const router = express.Router();
-
 // Database
-const db = require("./db");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+import db from "./db.js";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+
+import { Router } from "express";
+export const router = Router();
 
 router.use(authToken);
 
@@ -15,7 +15,7 @@ router.post("/login", (req, res) => {
 
     try {
       const QUERY = `SELECT * from accounts where email='${email}'`;
-      db.query(QUERY, (err, result) => {
+      db.query(QUERY, (err, result: Array<any>) => {
         if (err) {
           res.sendStatus(500);
           console.log(err);
@@ -88,9 +88,7 @@ router.post("/sign-up", async (req, res) => {
 });
 
 router.get("/logout", (req, res) => {
-  console.log("Yes1");
   if (req.user) {
-    console.log("yes");
     res.clearCookie("jwt");
   }
   res.sendStatus(200);
@@ -113,5 +111,3 @@ function authToken(req, res, next) {
   }
   next();
 }
-
-module.exports = router;

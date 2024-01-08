@@ -1,28 +1,23 @@
-require("dotenv").config();
+import dotenv from "dotenv";
+dotenv.config();
 
 // Express app
-const express = require("express");
+import express from "express";
+import cookieParser from "cookie-parser";
+import cors from "cors";
 const app = express();
-const cookieParser = require("cookie-parser");
-const cors = require("cors");
 
 // Utilities
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
 
 // HTTP libraries
-const HTTPServer = require("http").createServer(app);
-const HTTPSServer = require("https").createServer(
-  {
-    key: fs.readFileSync(path.join(__dirname, "HTTPS", "key.pem")),
-    cert: fs.readFileSync(path.join(__dirname, "HTTPS", "cert.pem")),
-  },
-  app
-);
-const bodyParser = require("body-parser");
+import http from "http";
+import bodyParser from "body-parser";
+const HTTPServer = http.createServer(app);
 
 // Database
-const db = require("./db");
+import db from "./db.js";
 
 // HTTP Middleware
 app.use(
@@ -31,7 +26,8 @@ app.use(
     origin: [
       "http://localhost:3000",
       "http://10.2.10.51:3000",
-      "https://server.queteck.com:3000",
+      "http://24.105.118.62:3000",
+      "http://server.queteck.com:3000",
     ],
   })
 );
@@ -43,8 +39,8 @@ app.use((req, res, next) => {
   next();
 });
 
-const router = require("./auth")
-app.use("/", router)
+import { router } from "./AuthServer.js";
+app.use("/", router);
 
 // HTTP Routes
 app.get("/", (req, res) => {
@@ -52,7 +48,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/messages", (req, res) => {
-  if (req.session.user) {
+  if (req.user) {
     let QUERY = "select * from messages";
     db.query(QUERY, (err, result) => {
       if (err) {
@@ -65,10 +61,10 @@ app.get("/messages", (req, res) => {
 });
 
 app.post("/postMessages", (req, res) => {
-  if (req.session.user) {
+  if (req.user) {
     const message = req.body.message;
     let QUERY = "insert into messages(user, message) values (?, ?)";
-    db.query(QUERY, [req.session.user.username, message], (err) => {
+    db.query(QUERY, [req.user.username, message], (err) => {
       if (err) {
         console.log(err);
         res.sendStatus(500);
@@ -151,8 +147,9 @@ app.post("/checkMove", (req, res) => {
   }
 });
 
-// Socket logic
-require("./socketio").socket(HTTPServer);
+// Socket routes
+import socket from "./socketio.js";
+socket(HTTPServer);
 
 HTTPServer.listen(3001, "10.2.10.51", () => {
   console.log("Server listening");
